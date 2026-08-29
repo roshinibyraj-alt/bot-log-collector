@@ -43,12 +43,12 @@ if (since) {
 }
 
 if (logtail > 0) {
-  const logs = subset.flatMap(r => (r.state && r.state.logs) || []).slice(-logtail);
+  const logs = subset.flatMap(r => (r.snapshot && r.snapshot.logs) || (r.state && r.state.logs) || []).slice(-logtail);
   logs.forEach(l => console.log(l));
 } else {
   const out = subset.slice(-Math.min(n, subset.length)).reverse();
   for (const r of out) {
-    const s = r.state || {};
+    const s = r.snapshot || r.state || {};
     console.log('──────────────────────────────────────────────');
     console.log(`${r.iso}  connected=${s.connected}  bankroll=${s.bankroll}  mark=${s.markValue}  totalPnl=${s.totalPnl}`);
     console.log(`wins/losses=${s.wins}/${s.losses}  tickCount=${s.tickCount}  waiting=${s.waitingForWindow}`);

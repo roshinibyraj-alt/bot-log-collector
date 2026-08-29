@@ -1,47 +1,51 @@
 # Bot Log Collector
 
-Standalone Node script that polls the **RecoveryBot** (`Invented`) and **MartingaleBot** (`Pumpfun`) `/api/status` endpoints every few seconds and snapshots the full state to append-only `logs/<bot>.jsonl` files, with a persistent history index. Lets you/inspect bugs **hours later** — perfect for diagnosing silent failures, wrong resolutions, or position/capital math.
+Standalone Node script that polls the **RecoveryBot** (`Invented`) and **MartingaleBot** (`Pumpfun`) `/api/status` endpoints and snapshots the state to append-only `logs/<bot>.jsonl`, with a persistent history index — so bugs can be diagnosed **hours later** with zero access needed to Railway logs.
 
 No external dependencies — uses Node 18+ built-in `fetch`.
 
 ## How it works
 - Polls each bot's `/api/status` on an interval (default 5s).
-- Appends one JSON line per snapshot to `logs/<bot>.jsonl`:
-  `{ ts, iso, name, url, state: { bankroll, positions, logs, markets, recovery, ... } }`
-- Maintains `logs/index.json` with per-bot totals, last-seen, files, and error counts.
-- Auto-rotates a `jsonl` when it exceeds `MAX_LINES` or is older than `ORPHAN_MS`, keeping a history of prior files.
-- Logs errors once per unique message (no spam).
+- Appends one JSON line per snapshot:
+  - **Full mode** (local): the whole response (bankroll, positions, markets, recovery, equityCurve, logs…).
+  - **Compact mode** (`COMPACT=1`, used by CI): a small curated summary (capital/equity, signal, recovery/martingale state, positions, recent trades/resolutions, last 60 log lines)
+- Maintains `logs/index.json` with per-bot totals, last-seen, rotations, and error counts.
+- Auto-rotates a `jsonl` when it exceeds `MAX_LINES` or is older than `ORPHAN_MS`.
+- Logs errors once per unique message.
 
-## Setup
-
-### Option A — env vars
+## Option A — run locally / VPS / anywhere
 ```bash
-export BOTS='[{"name":"recoverybot","url":"https://recoverybot.up.railway.app"},{"name":"martingalebot","url":"https://martingalebot.up.railway.app"}]'
-export POLL_MS=5000
+export RECOVERYBOT_URL=https://recoverybot.up.railway.app
+export MARTINGALEBOT_URL=https://martingalebot.up.railway.app
+node collector.js          # runs forever; Ctrl-C to stop
+```
+Or with a `BOTS` JSON:
+```bash
+export BOTS='[{"name":"recoverybot","url":"..."},{"name":"martingalebot","url":"..."}]'
 node collector.js
 ```
-Alternative env form: set `RECOVERYBOT_URL=...` and `MARTINGALEBOT_URL=...` (any `<NAME>_URL`) and they auto-register.
 
-### Option B — config.json
-```bash
-cp config.example.json config.json   # fill in real Railway URLs
-node collector.js
-```
+## Option B — GitHub Actions cron (no server needed)
+The repo ships `.github/workflows/capture.yml`:
+
+1. Add two **Actions secrets** to this repo: `RECOVERYBOT_URL` and `MARTINGALEBOT_URL` (the bots' Railway URLs).
+2. The workflow runs **every 10 minutes** (edit the `cron` line), runs the collector with `ROUNDS=6 POLL_MS=1500 COMPACT=1` (~10s per run), and **commits the accumulated `logs/` back to the repo**.
+3. Trigger a manual run anytime with the **Run workflow** button.
+
+### GitHub Actions limits to know
+- Minimum cron interval is ~5 minutes; 10 min is a good default.
+- Each run appends ~6 compact snapshots per bot (every 10 min) → ~1.4MB/day for both bots, very comfortable for GitHub.
+- Logs live in **Git history** (every capture is one commit), so the full history is always present and recoverable.
+- No Railway or always-on box needed; the public repo URL stays private-ish since the bot URLs live only in Actions secrets.
 
 ## Reading history
-
 ```bash
-node inspect.js --index                      # totals + files per bot
-node inspect.js --bot recoverybot --n 20     # last 20 snapshots
+node inspect.js --index                          # totals + files per bot
+node inspect.js --bot recoverybot --n 20         # last 20 snapshots
 node inspect.js --bot recoverybot --since "14:00"
-node inspect.js --bot martingalebot --logtail 100   # consolidated log tail
+node inspect.js --bot martingalebot --logtail 100    # consolidated log tail
 ```
-
-## Rotating / storage
-- Default `LOG_DIR=./logs` is git-ignored.
-- On Railway, mount a **persistent volume** at the repo root (or at `LOG_DIR`) so the `jsonl` history survives restarts/redeploys.
-- If you prefer committing history, set `LOG_DIR` elsewhere and copy files back — or remove `logs/` from `.gitignore` to track snapshots in Git for tiny bots.
 
 ## Notes
 - The collector is **read-only** against the bots — it never modifies them.
-- It only needs network access to the two bot URLs (from any box: local, Railway, or a tiny VPS).
+- `logs/` is tracked by Git so the GitHub Actions cron can persist history; local-test `*.log` files are ignored.

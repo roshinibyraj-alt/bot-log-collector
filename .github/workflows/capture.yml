@@ -1,0 +1,49 @@
+name: capture-log-history
+on:
+  schedule:
+    # Every 10 minutes — adjust as needed (GitHub allows >= 5 min cron).
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: capture
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Capture snapshots (bounded run)
+        env:
+          RECOVERYBOT_URL: ${{ secrets.RECOVERYBOT_URL }}
+          MARTINGALEBOT_URL: ${{ secrets.MARTINGALEBOT_URL }}
+          POLL_MS: '1500'
+          ROUNDS: '6'
+          COMPACT: '1'
+        run: node collector.js
+
+      - name: Commit log history
+        run: |
+          git config user.name 'codex-bot'
+          git config user.email 'codex-bot@users.noreply.github.com'
+          git add -A logs/ || true
+          if git diff --cached --quiet; then
+            echo "No log changes this run."
+          else
+            git commit -m "capture: log history $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          fi
