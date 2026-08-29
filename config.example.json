@@ -1,0 +1,11 @@
+{
+  "bots": [
+    { "name": "recoverybot",   "url": "https://recoverybot.up.railway.app" },
+    { "name": "martingalebot", "url": "https://martingalebot.up.railway.app" }
+  ],
+  "pollMs": 5000,
+  "timeoutMs": 3000,
+  "logDir": "./logs",
+  "maxLines": 500000,
+  "orphanMs": 86400000
+}

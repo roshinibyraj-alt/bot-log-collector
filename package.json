@@ -1,0 +1,12 @@
+{
+  "name": "bot-log-collector",
+  "version": "1.0.0",
+  "description": "Standalone poller that snapshots RecoveryBot/MartingaleBot /api/status to logs/*.jsonl with a history index",
+  "main": "collector.js",
+  "engines": { "node": ">=18.0.0" },
+  "scripts": {
+    "start": "node collector.js",
+    "smoke": "node --check collector.js && node --check inspect.js"
+  },
+  "dependencies": {}
+}
