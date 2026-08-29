@@ -27,7 +27,7 @@ function parseBots() {
   catch (_) {
     const bots = [];
     for (const [k, v] of Object.entries(process.env)) {
-      if (k.endsWith('_URL') && v) bots.push({ name: k.replace(/_URL$/, '').toLowerCase(), url: v });
+      if (k.endsWith('_URL') && v && !k.startsWith('GITHUB_')) bots.push({ name: k.replace(/_URL$/, '').toLowerCase(), url: v });
     }
     if (bots.length) return bots;
     // absolute fallback for local runs only
