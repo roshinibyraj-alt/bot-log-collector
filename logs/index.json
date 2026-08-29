@@ -1,0 +1,62 @@
+{
+  "bots": {
+    "recoverybot": {
+      "url": "https://web-production-2d7ff.up.railway.app/",
+      "firstSeen": 1788020771927,
+      "lastSeen": 1788020780283,
+      "totalSnapshots": 6,
+      "totalLogLines": 288,
+      "totalErrors": 0,
+      "lastError": null,
+      "files": [],
+      "compact": true,
+      "_lastSuccess": true
+    },
+    "github_api": {
+      "url": "https://api.github.com",
+      "firstSeen": 1788020771927,
+      "lastSeen": null,
+      "totalSnapshots": 0,
+      "totalLogLines": 0,
+      "totalErrors": 6,
+      "lastError": "HTTP 404",
+      "files": [],
+      "compact": true
+    },
+    "martingalebot": {
+      "url": "https://pumpfun-production-7acb.up.railway.app/",
+      "firstSeen": 1788020771927,
+      "lastSeen": 1788020780424,
+      "totalSnapshots": 6,
+      "totalLogLines": 252,
+      "totalErrors": 0,
+      "lastError": null,
+      "files": [],
+      "compact": true,
+      "_lastSuccess": true
+    },
+    "github_graphql": {
+      "url": "https://api.github.com/graphql",
+      "firstSeen": 1788020771927,
+      "lastSeen": null,
+      "totalSnapshots": 0,
+      "totalLogLines": 0,
+      "totalErrors": 6,
+      "lastError": "HTTP 403",
+      "files": [],
+      "compact": true
+    },
+    "github_server": {
+      "url": "https://github.com",
+      "firstSeen": 1788020771927,
+      "lastSeen": null,
+      "totalSnapshots": 0,
+      "totalLogLines": 0,
+      "totalErrors": 6,
+      "lastError": "HTTP 404",
+      "files": [],
+      "compact": true
+    }
+  },
+  "createdAt": 1788020771927
+}
