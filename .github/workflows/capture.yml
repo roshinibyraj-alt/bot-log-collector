@@ -29,8 +29,8 @@ jobs:
 
       - name: Capture snapshots (bounded run)
         env:
-          RECOVERYBOT_URL: ${{ secrets.RECOVERYBOT_URL }}
-          MARTINGALEBOT_URL: ${{ secrets.MARTINGALEBOT_URL }}
+          RECOVERYBOT_URL: ${{ secrets.RECOVERY_BOT }}
+          MARTINGALEBOT_URL: ${{ secrets.MARTINGALE_BOT }}
           POLL_MS: '1500'
           ROUNDS: '6'
           COMPACT: '1'

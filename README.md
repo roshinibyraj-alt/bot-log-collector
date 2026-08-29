@@ -28,7 +28,7 @@ node collector.js
 ## Option B — GitHub Actions cron (no server needed)
 The repo ships `.github/workflows/capture.yml`:
 
-1. Add two **Actions secrets** to this repo: `RECOVERYBOT_URL` and `MARTINGALEBOT_URL` (the bots' Railway URLs).
+1. Add two **Actions secrets** to this repo: `RECOVERY_BOT` and `MARTINGALE_BOT` (the bots' Railway URLs).
 2. The workflow runs **every 10 minutes** (edit the `cron` line), runs the collector with `ROUNDS=6 POLL_MS=1500 COMPACT=1` (~10s per run), and **commits the accumulated `logs/` back to the repo**.
 3. Trigger a manual run anytime with the **Run workflow** button.
 
