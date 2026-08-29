@@ -50,6 +50,12 @@ async function initIndex() {
   }
   if (!idx.bots) idx.bots = {};
   if (!idx.createdAt) idx.createdAt = Date.now();
+  // Drop entries for bots that are no longer declared (e.g. phantoms from
+  // GitHub-injected *_URL env vars captured by an earlier run).
+  const declared = new Set(BOTS.map(b => b.name));
+  for (const name of Object.keys(idx.bots)) {
+    if (!declared.has(name)) delete idx.bots[name];
+  }
   for (const b of BOTS) {
     if (!idx.bots[b.name]) {
       idx.bots[b.name] = {
