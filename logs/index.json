@@ -3,9 +3,9 @@
     "recoverybot": {
       "url": "https://web-production-2d7ff.up.railway.app/",
       "firstSeen": 1788020771927,
-      "lastSeen": 1788372505461,
-      "totalSnapshots": 168,
-      "totalLogLines": 23908,
+      "lastSeen": 1788382883716,
+      "totalSnapshots": 174,
+      "totalLogLines": 25708,
       "totalErrors": 0,
       "lastError": null,
       "files": [],
@@ -15,8 +15,8 @@
     "martingalebot": {
       "url": "https://pumpfun-production-7acb.up.railway.app/",
       "firstSeen": 1788020771927,
-      "lastSeen": 1788372505572,
-      "totalSnapshots": 168,
+      "lastSeen": 1788382883846,
+      "totalSnapshots": 174,
       "totalLogLines": 15387,
       "totalErrors": 0,
       "lastError": null,
