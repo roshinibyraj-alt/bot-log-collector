@@ -6,8 +6,8 @@
       "lastSeen": 1788477143626,
       "totalSnapshots": 222,
       "totalLogLines": 40474,
-      "totalErrors": 0,
-      "lastError": null,
+      "totalErrors": 6,
+      "lastError": "HTTP 404",
       "files": [],
       "compact": true,
       "_lastSuccess": true
@@ -15,8 +15,8 @@
     "martingalebot": {
       "url": "https://pumpfun-production-7acb.up.railway.app/",
       "firstSeen": 1788020771927,
-      "lastSeen": 1788477143791,
-      "totalSnapshots": 222,
+      "lastSeen": 1788483777083,
+      "totalSnapshots": 228,
       "totalLogLines": 15387,
       "totalErrors": 0,
       "lastError": null,
